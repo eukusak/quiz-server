@@ -7,7 +7,7 @@ const session = require('express-session');
 const app = express();
 const db = new sqlite3.Database('quiz.db');
 
-// DB 테이블 생성
+// DB 테이블 생성 (feedback 컬럼 추가)
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS quiz_results (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,6 +17,7 @@ db.serialize(() => {
     userAnswer TEXT,
     correct TEXT,
     isCorrect TEXT,
+    feedback TEXT,
     created DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 });
@@ -29,9 +30,9 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// 퀴즈 결과 저장 (문제별로 한 번만 저장)
+// 퀴즈 결과 저장 (문제별로 한 번만 저장, feedback 저장)
 app.post('/save-quiz', (req, res) => {
-  const { name, dept, question, userAnswer, correct, isCorrect } = req.body;
+  const { name, dept, question, userAnswer, correct, isCorrect, feedback } = req.body;
   if (!name || !dept || !question) {
     return res.status(400).json({ error: 'Invalid data' });
   }
@@ -44,8 +45,8 @@ app.post('/save-quiz', (req, res) => {
         return res.json({ ok: false, msg: '이미 제출한 문제입니다.' });
       }
       db.run(
-        'INSERT INTO quiz_results (name, dept, question, userAnswer, correct, isCorrect) VALUES (?, ?, ?, ?, ?, ?)',
-        [name, dept, question, userAnswer, correct, isCorrect],
+        'INSERT INTO quiz_results (name, dept, question, userAnswer, correct, isCorrect, feedback) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [name, dept, question, userAnswer, correct, isCorrect, feedback || ""],
         function (err2) {
           if (err2) return res.status(500).json({ error: 'DB Error' });
           res.json({ ok: true });
@@ -87,14 +88,14 @@ app.get('/admin/logout', (req, res) => {
   });
 });
 
-// 관리자: 전체 결과 CSV 다운로드 (로그인 필요)
+// 관리자: 전체 결과 CSV 다운로드 (해설, 제출시각 포함)
 app.get('/admin/download-csv', (req, res) => {
   if (!req.session.admin) return res.status(403).send('Forbidden');
-  db.all('SELECT * FROM quiz_results ORDER BY created DESC', (err, rows) => {
+  db.all('SELECT * FROM quiz_results ORDER BY name, dept, created', (err, rows) => {
     if (err) return res.status(500).send('DB Error');
-    let csv = '이름,소속,문제,내답,정답,정오,제출시각\n';
+    let csv = '이름,소속,문제,내답,정답,정오,해설,제출시각\n';
     rows.forEach(r => {
-      csv += `"${r.name}","${r.dept}","${r.question}","${r.userAnswer}","${r.correct}","${r.isCorrect}","${r.created}"\n`;
+      csv += `"${r.name}","${r.dept}","${r.question}","${r.userAnswer}","${r.correct}","${r.isCorrect || ""}","${r.feedback || ""}","${r.created}"\n`;
     });
     res.setHeader('Content-Type', 'text/csv; charset=UTF-8');
     res.setHeader('Content-Disposition', 'attachment; filename="quiz_results.csv"');
