@@ -162,6 +162,13 @@ const quizData = [
   }
 ];
 
+// 캐릭터 영상 파일명 (기본, 정답, 오답)
+const characterVideos = {
+  normal: "ai_normal.mp4",
+  correct: "ai_happy.mp4",
+  wrong: "ai_sad.mp4"
+};
+
 // 랜덤 문제 순서 생성
 function getRandomOrder(n) {
   const arr = Array.from({length: n}, (_, i) => i);
@@ -178,14 +185,18 @@ let userName = "";
 let userDept = "";
 let answered = [];
 let score = 0;
-let userAnswers = []; // [{question, userAnswer, correct, isCorrect, feedback}]
+let userAnswers = [];
 
 window.onload = function() {
+  // 이름/소속 입력 화면
   const userInfoArea = document.getElementById('userInfoArea');
   const userNameInput = document.getElementById('userName');
   const userDeptInput = document.getElementById('userDept');
   const userInfoBtn = document.getElementById('userInfoBtn');
+  // 시작하기 화면
+  const startArea = document.getElementById('startArea');
   const startBtn = document.getElementById('startBtn');
+  // 퀴즈 화면
   const quizContainer = document.querySelector('.quiz-container');
   const characterVideo = document.getElementById('characterVideo');
   const characterSpeech = document.getElementById('characterSpeech');
@@ -203,7 +214,18 @@ window.onload = function() {
       return;
     }
     userInfoArea.style.display = "none";
-    startBtn.style.display = "block";
+    startArea.style.display = "block";
+  };
+
+  startBtn.onclick = function() {
+    startArea.style.display = "none";
+    quizContainer.style.display = "block";
+    quizOrder = getRandomOrder(quizData.length);
+    currentQuiz = 0;
+    answered = [];
+    score = 0;
+    userAnswers = [];
+    loadQuiz(currentQuiz);
   };
 
   function setCharacterVideo(type) {
@@ -243,7 +265,7 @@ window.onload = function() {
     }
     const answer = parseInt(checked.value, 10);
 
-    // 서버에 결과 저장
+    // 서버에 결과 저장 (feedback도 함께 전송)
     fetch('/save-quiz', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -253,7 +275,8 @@ window.onload = function() {
         question: q.question,
         userAnswer: q.options[answer],
         correct: q.options[q.correct],
-        isCorrect: answer === q.correct ? "O" : "X"
+        isCorrect: answer === q.correct ? "O" : "X",
+        feedback: q.feedback[answer]
       })
     });
 
@@ -323,23 +346,4 @@ window.onload = function() {
       })
     });
   };
-
-  // 시작하기 버튼 클릭 시 퀴즈 시작
-  startBtn.onclick = function() {
-    startBtn.style.display = "none";
-    quizContainer.style.display = "block";
-    quizOrder = getRandomOrder(quizData.length);
-    currentQuiz = 0;
-    answered = [];
-    score = 0;
-    userAnswers = [];
-    loadQuiz(currentQuiz);
-  };
-};
-
-// 캐릭터 영상 파일명 (기본, 정답, 오답)
-const characterVideos = {
-  normal: "ai_normal.mp4",
-  correct: "ai_happy.mp4",
-  wrong: "ai_sad.mp4"
 };

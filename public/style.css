@@ -4,75 +4,56 @@ body {
   margin: 0;
   padding: 0;
 }
-.quiz-container {
-  max-width: 500px;
-  margin: 40px auto;
+.logo-wrap {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 30px;
+}
+.main-logo {
+  width: 640px;
+  max-width: 90vw;
+  height: auto;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border-radius: 24px;
+  background: #fff;
+}
+.input-wrap {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.input-wrap input {
+  font-size: 20px;
+  padding: 10px 16px;
+  margin: 0 8px 0 0;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  width: 180px;
+  max-width: 40vw;
+}
+.input-wrap button {
+  font-size: 20px;
+  padding: 10px 32px;
+  border-radius: 10px;
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+#userInfoArea, #startArea {
+  max-width: 700px;
+  margin: 0 auto;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   padding: 30px 20px 40px 20px;
   text-align: center;
 }
-.character-area {
-  margin-bottom: 20px;
-  position: relative;
-}
-.speech-bubble {
-  display: inline-block;
-  background: #e0f7fa;
-  border-radius: 20px;
-  padding: 12px 20px;
-  margin-top: 10px;
-  font-size: 18px;
-  color: #333;
-  position: relative;
-}
-.speech-bubble:after {
-  content: '';
-  position: absolute;
-  left: 30px;
-  top: 100%;
-  width: 0;
-  height: 0;
-  border: 15px solid transparent;
-  border-top: 15px solid #e0f7fa;
-}
-.question-area {
-  margin-bottom: 20px;
-  font-size: 20px;
-}
-#feedbackArea {
-  margin-top: 20px;
-  font-size: 18px;
-  min-height: 30px;
-}
-button {
-  margin-top: 18px;
-  padding: 10px 24px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: none;
-  background: #4CAF50;
-  color: #fff;
-  cursor: pointer;
-}
-button:disabled {
-  background: #ccc;
-  color: #888;
-  cursor: not-allowed;
-}
-video {
-  border-radius: 50%;
-  background: #000;
-  object-fit: cover;
-  margin-bottom: 8px;
-}
 #startBtn {
   display: block;
-  margin: 100px auto 30px auto;
-  padding: 16px 40px;
-  font-size: 22px;
-  border-radius: 12px;
+  margin: 40px auto 0 auto;
+  padding: 18px 60px;
+  font-size: 28px;
+  border-radius: 14px;
   background: #2196F3;
   color: #fff;
   border: none;
@@ -81,32 +62,4 @@ video {
 }
 #startBtn:hover {
   background: #1976D2;
-}
-#userInfoArea {
-  text-align: center;
-  margin-top: 100px;
-  margin-bottom: 30px;
-}
-#userInfoArea input {
-  font-size: 18px;
-  padding: 8px 12px;
-  margin: 0 6px 0 0;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-}
-#userInfoArea button {
-  font-size: 18px;
-  padding: 8px 24px;
-  border-radius: 8px;
-  background: #4CAF50;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-#adminPage {
-  color: #1976D2;
-  font-size: 15px;
-  text-decoration: underline;
-  display: inline-block;
-  margin-top: 10px;
 }

@@ -6,12 +6,25 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- 이름/소속 입력 화면 -->
   <div id="userInfoArea">
-    <input type="text" id="userName" placeholder="이름">
-    <input type="text" id="userDept" placeholder="소속">
-    <button id="userInfoBtn">확인</button>
+    <div class="logo-wrap">
+      <img src="logo.png" alt="로고" class="main-logo">
+    </div>
+    <div class="input-wrap">
+      <input type="text" id="userDept" placeholder="소속">
+      <input type="text" id="userName" placeholder="이름">
+      <button id="userInfoBtn">확인</button>
+    </div>
   </div>
-  <button id="startBtn" style="display:none;">시작하기</button>
+  <!-- 시작하기 화면 -->
+  <div id="startArea" style="display:none;">
+    <div class="logo-wrap">
+      <img src="logo.png" alt="로고" class="main-logo">
+    </div>
+    <button id="startBtn">시작하기</button>
+  </div>
+  <!-- 퀴즈 화면 -->
   <div class="quiz-container" style="display:none;">
     <div class="character-area">
       <video id="characterVideo" width="320" height="320">
