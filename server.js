@@ -3,10 +3,15 @@ const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const session = require('express-session');
+const fs = require('fs');
 
 const app = express();
 const db = new sqlite3.Database('quiz.db');
 
+// quizData를 public/quizData.json에서 불러옴
+const quizData = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'quizData.json'), 'utf8'));
+
+// ★★★ 테이블 생성 코드 ★★★
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS quiz_results (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +54,10 @@ app.post('/save-quiz', (req, res) => {
         'INSERT INTO quiz_results (name, dept, question, userAnswer, correct, isCorrect, feedback) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [name, dept, question, userAnswer, correct, isCorrect, feedback || ""],
         function (err2) {
-          if (err2) return res.status(500).json({ error: 'DB Error' });
+          if (err2) {
+            console.error('DB Error:', err2); // 콘솔에 에러 출력
+            return res.status(500).json({ error: 'DB Error' });
+          }
           res.json({ ok: true });
         }
       );
@@ -89,22 +97,21 @@ app.get('/admin/logout', (req, res) => {
   });
 });
 
-// 관리자: 전체 결과 CSV 다운로드 (문제별 답, 점수, 제출시각만 한 줄로)
+// 관리자: 전체 결과 CSV 다운로드 (문제별 답, 점수, 제출시각만 한 줄로, 문제 제목 포함)
 app.get('/admin/download-csv', (req, res) => {
   if (!req.session.admin) return res.status(403).send('Forbidden');
-  const totalQuestions = 15;
   db.all('SELECT * FROM quiz_results WHERE question="[최종제출]" ORDER BY dept, name, created', (err, rows) => {
     if (err) return res.status(500).send('DB Error');
     let csv = '소속,성함';
-    for (let i = 1; i <= totalQuestions; i++) {
-      csv += `,${i}`;
+    for (let i = 0; i < quizData.length; i++) {
+      csv += `,"${i+1}. ${quizData[i].question.replace(/"/g, '""')}"`;
     }
     csv += ',점수,제출시간\n';
     rows.forEach(r => {
       const answers = (r.userAnswer || '').split('/');
-      while (answers.length < totalQuestions) answers.push("0");
+      while (answers.length < quizData.length) answers.push("0");
       csv += `"${r.dept}","${r.name}"`;
-      for (let i = 0; i < totalQuestions; i++) {
+      for (let i = 0; i < quizData.length; i++) {
         csv += `,"${answers[i] || "0"}"`;
       }
       csv += `,"${r.correct || ""}","${r.created}"\n`;
