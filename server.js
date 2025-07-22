@@ -102,8 +102,13 @@ app.get('/admin/download-csv', (req, res) => {
   });
 });
 
-// 서버 시작
-const PORT = 3000;
+// 404 처리 (정적 파일/라우트가 없을 때)
+app.use((req, res) => {
+  res.status(404).send('페이지를 찾을 수 없습니다.');
+});
+
+// 서버 시작 (Render 등 클라우드 환경 대응)
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`서버가 http://localhost:${PORT} 에서 실행 중`);
 });
