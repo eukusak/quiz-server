@@ -256,6 +256,7 @@ const quizData = [
   }
 ];
 // quizData는 위에서 정의한 것을 사용
+// quizData는 위에서 제공한 것을 사용
 
 const characterVideos = {
   normal: "ai_normal.mp4",
