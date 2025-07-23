@@ -1,16 +1,17 @@
 body {
-  font-family: '맑은 고딕', Arial, sans-serif;
-  background: #f0f4fa;
+  font-family: 'Nanum Pen Script', 'Gowun Batang', '맑은 고딕', Arial, sans-serif;
+  background: linear-gradient(135deg, #e6f0e6 0%, #f9efd7 100%);
+  background-attachment: fixed;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
 }
 
 .logo-wrap {
   text-align: center;
-  margin-top: 60px;
-  margin-bottom: 30px;
+  margin-top: 48px;
+  margin-bottom: 28px;
 }
-
 .main-logo {
   width: 640px;
   height: 360px;
@@ -27,130 +28,167 @@ body {
   margin-bottom: 30px;
 }
 .input-wrap input {
-  font-size: 20px;
-  padding: 10px 16px;
-  margin: 0 8px 0 0;
-  border-radius: 8px;
-  border: 1px solid #bbb;
+  font-size: 23px;
+  padding: 12px 20px;
+  margin: 0 10px 0 0;
+  border-radius: 16px;
+  border: 2px solid #b4d3a7;
   width: 180px;
   max-width: 40vw;
+  background: #f9f7ed;
+  box-shadow: 0 2px 8px rgba(140,180,120,0.07);
+  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
+  transition: border 0.2s;
+}
+.input-wrap input:focus {
+  outline: none;
+  border: 2.5px solid #7fc97f;
+  background: #f5ffe6;
 }
 .input-wrap button {
-  font-size: 20px;
-  padding: 10px 32px;
-  border-radius: 10px;
-  background: #4CAF50;
-  color: #fff;
+  font-size: 22px;
+  padding: 12px 40px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #a8e063, #f9d423);
+  color: #5a3e1b;
   border: none;
   cursor: pointer;
+  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
+  box-shadow: 0 2px 8px rgba(200,180,120,0.12);
+  transition: background 0.3s, transform 0.1s;
+}
+.input-wrap button:hover {
+  background: linear-gradient(90deg, #f9d423, #a8e063);
+  transform: translateY(-2px) scale(1.05);
 }
 
 #userInfoArea, #startArea {
   max-width: 700px;
   margin: 0 auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 30px 20px 40px 20px;
+  background: rgba(255,255,255,0.93);
+  border-radius: 28px;
+  box-shadow: 0 4px 24px rgba(120, 100, 80, 0.11);
+  padding: 36px 28px 44px 28px;
   text-align: center;
+  border: 2.5px solid #e2decf;
 }
 
-/* 퀴즈 영역 */
 .quiz-container {
-  max-width: 700px;
-  margin: 40px auto 0 auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 30px 20px 40px 20px;
+  max-width: 720px;
+  margin: 48px auto 0 auto;
+  background: rgba(255,255,255,0.98);
+  border-radius: 32px;
+  box-shadow: 0 4px 24px rgba(120, 100, 80, 0.13);
+  padding: 38px 30px 48px 30px;
   text-align: center;
-  overflow-x: auto; /* 모바일 넘침 방지 */
+  overflow-x: auto;
+  border: 2.5px solid #e2decf;
 }
 
 .character-area {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
+}
+.character-area video {
+  border-radius: 50%;
+  border: 3px solid #b4d3a7;
+  background: #eaf6e7;
+  box-shadow: 0 2px 16px rgba(120, 180, 120, 0.14);
 }
 
 .speech-bubble {
-  margin-top: 12px;
-  background: #e3f2fd;
-  color: #1976D2;
-  border-radius: 18px;
-  padding: 14px 28px;
-  font-size: 18px;
+  margin-top: 14px;
+  background: #fffbe6;
+  color: #6a4e16;
+  border-radius: 24px;
+  padding: 18px 32px;
+  font-size: 22px;
   font-weight: 500;
-  box-shadow: 0 1px 6px rgba(33,150,243,0.08);
+  box-shadow: 0 2px 12px rgba(210,180,100,0.10);
   display: inline-block;
   max-width: 90vw;
+  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
+  border: 2.5px dashed #f9d423;
 }
 
 .question-area {
-  margin: 30px 0 20px 0;
+  margin: 38px 0 24px 0;
   text-align: center;
 }
 
 #questionText {
-  font-size: 22px;
+  font-size: 25px;
   font-weight: bold;
-  margin-bottom: 24px;
-  color: #222;
+  margin-bottom: 28px;
+  color: #4b3f2f;
   text-align: center;
+  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
 }
 
 #quizForm {
   display: inline-block;
   text-align: left;
   margin: 0 auto;
-  background: #f7fafd;
-  border-radius: 12px;
-  padding: 24px 20px 16px 20px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  background: #f7f5ed;
+  border-radius: 18px;
+  padding: 28px 26px 18px 26px;
+  box-shadow: 0 2px 10px rgba(180, 170, 140, 0.07);
   min-width: 260px;
-  max-width: 90vw;
-  overflow-x: auto; /* 모바일 넘침 방지 */
+  max-width: 92vw;
+  overflow-x: auto;
+  border: 2px solid #e2decf;
 }
 #quizForm label {
   display: block;
-  font-size: 18px;
-  margin-bottom: 14px;
+  font-size: 21px;
+  margin-bottom: 16px;
   cursor: pointer;
+  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
+  color: #3d5a2a;
+  transition: color 0.2s;
 }
 #quizForm input[type="radio"] {
-  margin-right: 8px;
+  margin-right: 10px;
+}
+#quizForm label:hover {
+  color: #a38c6d;
 }
 
 #feedbackArea {
-  margin: 18px 0 10px 0;
-  font-size: 17px;
-  font-weight: 500;
+  margin: 22px 0 14px 0;
+  font-size: 20px;
+  font-weight: 600;
   color: #d32f2f;
   min-height: 32px;
+  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
 }
 
 #nextBtn, #finishBtn, #submitBtn {
-  font-size: 20px;
-  padding: 12px 36px;
-  border-radius: 10px;
-  background: #1976D2;
-  color: #fff;
+  font-size: 22px;
+  padding: 14px 44px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #a8e063, #f9d423);
+  color: #5a3e1b;
   border: none;
   cursor: pointer;
-  margin-top: 18px;
-  margin-right: 8px;
-  transition: background 0.2s;
+  margin-top: 22px;
+  margin-right: 10px;
+  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
+  box-shadow: 0 2px 8px rgba(200,180,120,0.13);
+  transition: background 0.3s, transform 0.1s;
 }
 #nextBtn:hover, #finishBtn:hover, #submitBtn:hover {
-  background: #0d47a1;
+  background: linear-gradient(90deg, #f9d423, #a8e063);
+  transform: translateY(-2px) scale(1.05);
 }
 #submitBtn:disabled {
   background: #b0bec5;
+  color: #fff;
   cursor: not-allowed;
 }
 
-/* 모바일 대응 */
 @media (max-width: 600px) {
   .main-logo {
     width: 98vw;
@@ -170,12 +208,12 @@ body {
     font-size: 18px;
   }
   .speech-bubble {
-    font-size: 15px;
-    padding: 10px 12px;
+    font-size: 17px;
+    padding: 12px 16px;
   }
   #nextBtn, #finishBtn, #submitBtn {
-    font-size: 16px;
+    font-size: 17px;
     padding: 10px 18px;
-    border-radius: 8px;
+    border-radius: 10px;
   }
 }

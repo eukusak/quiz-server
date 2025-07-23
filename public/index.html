@@ -2,13 +2,16 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>AI 캐릭터 객관식 퀴즈 예시</title>
+  <title>지브리 스타일 객관식 퀴즈</title>
+  <!-- 손글씨 느낌 폰트 추가 -->
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Batang&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- 이름/소속 입력 화면 -->
   <div id="userInfoArea">
     <div class="logo-wrap">
+      <!-- 기존 로고/이미지 유지 -->
       <img src="logo.png" alt="로고" class="main-logo">
     </div>
     <div class="input-wrap">
@@ -22,12 +25,12 @@
     <div class="logo-wrap">
       <img src="logo.png" alt="로고" class="main-logo">
     </div>
-    <button id="startBtn">시작하기</button>
+    <button id="startBtn">퀴즈 풀기</button>
   </div>
   <!-- 퀴즈 화면 -->
   <div class="quiz-container" style="display:none;">
     <div class="character-area">
-      <video id="characterVideo" width="320" height="320">
+      <video id="characterVideo" width="240" height="240">
         <source src="ai_normal.mp4" type="video/mp4">
         브라우저가 video 태그를 지원하지 않습니다.
       </video>
