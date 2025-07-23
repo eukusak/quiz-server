@@ -1,10 +1,27 @@
+@import url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSans.css');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
 body {
-  font-family: 'Nanum Pen Script', 'Gowun Batang', '맑은 고딕', Arial, sans-serif;
+  font-family: 'GmarketSans', 'Pretendard', '맑은 고딕', Arial, sans-serif;
   background: linear-gradient(135deg, #e6f0e6 0%, #f9efd7 100%);
   background-attachment: fixed;
   margin: 0;
   padding: 0;
   min-height: 100vh;
+}
+
+#questionText,
+#quizForm label,
+.speech-bubble,
+#feedbackArea,
+#nextBtn,
+#finishBtn,
+#submitBtn,
+.input-wrap input,
+.input-wrap button {
+  font-family: 'GmarketSans', 'Pretendard', '맑은 고딕', Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.5px;
 }
 
 .logo-wrap {
@@ -37,7 +54,6 @@ body {
   max-width: 40vw;
   background: #f9f7ed;
   box-shadow: 0 2px 8px rgba(140,180,120,0.07);
-  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
   transition: border 0.2s;
 }
 .input-wrap input:focus {
@@ -53,7 +69,6 @@ body {
   color: #5a3e1b;
   border: none;
   cursor: pointer;
-  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
   box-shadow: 0 2px 8px rgba(200,180,120,0.12);
   transition: background 0.3s, transform 0.1s;
 }
@@ -109,7 +124,6 @@ body {
   box-shadow: 0 2px 12px rgba(210,180,100,0.10);
   display: inline-block;
   max-width: 90vw;
-  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
   border: 2.5px dashed #f9d423;
 }
 
@@ -124,7 +138,6 @@ body {
   margin-bottom: 28px;
   color: #4b3f2f;
   text-align: center;
-  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
 }
 
 #quizForm {
@@ -145,7 +158,6 @@ body {
   font-size: 21px;
   margin-bottom: 16px;
   cursor: pointer;
-  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
   color: #3d5a2a;
   transition: color 0.2s;
 }
@@ -162,7 +174,6 @@ body {
   font-weight: 600;
   color: #d32f2f;
   min-height: 32px;
-  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
 }
 
 #nextBtn, #finishBtn, #submitBtn {
@@ -175,7 +186,6 @@ body {
   cursor: pointer;
   margin-top: 22px;
   margin-right: 10px;
-  font-family: 'Nanum Pen Script', 'Gowun Batang', serif;
   box-shadow: 0 2px 8px rgba(200,180,120,0.13);
   transition: background 0.3s, transform 0.1s;
 }
