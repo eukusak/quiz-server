@@ -62,6 +62,11 @@ function initQuiz() {
   function loadQuiz(idx) {
     const qIdx = quizOrder[idx];
     const q = quizData[qIdx];
+    let buttonHtml = `<button type="button" id="submitBtn" style="display:block;margin:24px auto 0 auto;">정답 제출</button>`;
+    // 마지막 문제(10번)일 때 "최종 제출" 버튼도 함께 보여줌
+    if (idx === quizData.length - 1) {
+      buttonHtml += `<button type="button" id="finalSubmitBtn" style="display:block;margin:24px auto 0 auto;background:linear-gradient(90deg,#a8e063,#f9d423);color:#5a3e1b;font-size:22px;padding:14px 44px;border-radius:16px;border:none;cursor:pointer;">최종 제출</button>`;
+    }
     quizContainer.innerHTML = `
       <div class="question-video-area" style="text-align:center;">
         <video width="640" height="360" autoplay muted playsinline style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;object-fit:cover;max-width:98vw;">
@@ -79,12 +84,15 @@ function initQuiz() {
               <input type="radio" name="answer" value="${i}" style="margin-right:10px;"> ${opt}
             </label>
           `).join('')}
-          <button type="button" id="submitBtn" style="display:block;margin:24px auto 0 auto;">정답 제출</button>
+          ${buttonHtml}
         </form>
         <div id="feedbackArea" style="margin-top:18px;"></div>
       </div>
     `;
     document.getElementById('submitBtn').onclick = submitAnswer;
+    if (idx === quizData.length - 1) {
+      document.getElementById('finalSubmitBtn').onclick = showSummary;
+    }
   }
 
   function submitAnswer() {
@@ -113,19 +121,9 @@ function initQuiz() {
       currentQuiz++;
       loadQuiz(currentQuiz);
     } else {
-      showFinalSubmit();
+      // 마지막 문제에선 최종 제출 버튼만 활성화, 결과는 showSummary에서 처리
+      document.getElementById('feedbackArea').textContent = "정답이 저장되었습니다. 아래의 '최종 제출'을 눌러주세요.";
     }
-  }
-
-  function showFinalSubmit() {
-    // 마지막 문제를 푼 후 "최종 제출" 버튼이 나옴
-    quizContainer.innerHTML = `
-      <div style="margin:60px 0 40px 0;font-size:22px;text-align:center;">
-        모든 문제를 다 풀었습니다.<br>
-        <button id="finalSubmitBtn" style="font-size:22px;padding:14px 44px;border-radius:16px;background:linear-gradient(90deg,#a8e063,#f9d423);color:#5a3e1b;border:none;cursor:pointer;margin-top:40px;">최종 제출</button>
-      </div>
-    `;
-    document.getElementById('finalSubmitBtn').onclick = showSummary;
   }
 
   function cleanFeedback(feedback) {
@@ -170,7 +168,15 @@ function initQuiz() {
         const ans = userAnswers[i] || {};
         const isCorrect = ans.isCorrect === "O";
         summaryHtml += `
-          <div class="result-question-block">
+          <div class="result-question-block" style="
+            margin-bottom:48px;
+            padding:32px 28px 32px 28px;
+            border-radius:18px;
+            background:#f7f5ed;
+            box-shadow:0 2px 10px rgba(180,170,140,0.07);
+            border:2.5px solid #e2decf;
+            text-align:left;
+            ">
             <div style="font-size:22px;font-weight:bold;color:#4b3f2f;margin-bottom:18px;text-align:left;">
               (${i+1}/${quizData.length}) [배점: ${q.score}] ${q.question}
             </div>
