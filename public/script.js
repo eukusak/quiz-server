@@ -113,6 +113,20 @@ function initQuiz() {
     }
   }
 
+  function cleanFeedback(feedback, isCorrect) {
+    // "정답입니다! 해설:" 또는 "오답입니다! 해설:" 등 제거
+    // 다양한 패턴 처리
+    // 예: "정답입니다! 해설: ..." / "오답입니다! 해설: ..." / "정답입니다!" / "오답입니다!" / "해설: ..."
+    // 1. "정답입니다! 해설:" or "오답입니다! 해설:" or "정답입니다! " or "오답입니다! " 제거
+    let cleaned = feedback;
+    cleaned = cleaned.replace(/^정답입니다! 해설:\s*/,"");
+    cleaned = cleaned.replace(/^오답입니다! 해설:\s*/,"");
+    cleaned = cleaned.replace(/^정답입니다!\s*/,"");
+    cleaned = cleaned.replace(/^오답입니다!\s*/,"");
+    cleaned = cleaned.replace(/^해설:\s*/,"");
+    return cleaned.trim();
+  }
+
   function showSummary() {
     let summaryHtml = `<h2 style="margin-bottom:40px;text-align:left;">내가 푼 문제 결과</h2>`;
     for (let i = 0; i < quizData.length; i++) {
@@ -150,7 +164,7 @@ function initQuiz() {
             <b>${isCorrect ? "정답입니다!" : "오답입니다!"}</b>
           </div>
           <div style="font-size:17px;color:#444;text-align:left;">
-            <b>해설:</b> ${q.feedback[ans.userAnswerIdx || 0]}
+            ${cleanFeedback(q.feedback[ans.userAnswerIdx || 0], isCorrect)}
           </div>
         </div>
       `;
