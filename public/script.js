@@ -6,7 +6,7 @@ let userDept = "";
 let userAnswers = [];
 let score = 0;
 
-// 영상 파일 경로 (모든 문제 동일, 파일명 변경)
+// 영상 파일 경로 (모든 문제 동일, 파일명 ai.mp4)
 const videoSrc = "ai.mp4";
 
 window.onload = function() {
@@ -197,7 +197,13 @@ function initQuiz() {
           isCorrect: "",
           feedback: ""
         })
-      }).then(() => {
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.ok === false) {
+          alert("이미 같은 소속과 이름으로 제출하셨습니다.\n중복 제출은 불가능합니다.");
+          return;
+        }
         document.querySelector('.quiz-container').innerHTML = `
           <div style="margin:80px 0 40px 0;font-size:22px;">
             퀴즈가 종료되었습니다.<br>
