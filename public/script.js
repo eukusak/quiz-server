@@ -1,29 +1,12 @@
 let quizData = [];
-const characterVideos = {
-  normal: "ai_normal.mp4",
-  correct: "ai_happy.mp4",
-  wrong: "ai_sad.mp4"
-};
-
-function getRandomOrder(n) {
-  const arr = Array.from({length: n}, (_, i) => i);
-  for (let i = n - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
 let quizOrder = [];
 let currentQuiz = 0;
 let userName = "";
 let userDept = "";
-let answered = [];
-let score = 0;
 let userAnswers = [];
+let score = 0;
 
 window.onload = function() {
-  // 문제 데이터 fetch
   fetch('quizData.json')
     .then(res => res.json())
     .then(data => {
@@ -43,13 +26,9 @@ function initQuiz() {
   const startBtn = document.getElementById('startBtn');
   // 퀴즈 화면
   const quizContainer = document.querySelector('.quiz-container');
-  const characterVideo = document.getElementById('characterVideo');
-  const characterSpeech = document.getElementById('characterSpeech');
   const questionText = document.getElementById('questionText');
   const quizForm = document.getElementById('quizForm');
   const feedbackArea = document.getElementById('feedbackArea');
-  const nextBtn = document.getElementById('nextBtn');
-  const finishBtn = document.getElementById('finishBtn');
 
   userInfoBtn.onclick = function() {
     userName = userNameInput.value.trim();
@@ -65,41 +44,26 @@ function initQuiz() {
   startBtn.onclick = function() {
     startArea.style.display = "none";
     quizContainer.style.display = "block";
-    quizOrder = getRandomOrder(quizData.length);
+    quizOrder = Array.from({length: quizData.length}, (_, i) => i); // 고정 순서
     currentQuiz = 0;
-    answered = [];
-    score = 0;
     userAnswers = [];
+    score = 0;
     loadQuiz(currentQuiz);
   };
-
-  function setCharacterVideo(type) {
-    characterVideo.pause();
-    characterVideo.querySelector('source').src = characterVideos[type];
-    characterVideo.load();
-    characterVideo.play();
-  }
 
   function loadQuiz(idx) {
     const qIdx = quizOrder[idx];
     const q = quizData[qIdx];
-    setCharacterVideo('normal');
-    characterSpeech.textContent = "문제를 맞춰봐!";
     questionText.textContent = `(${idx+1}/${quizData.length}) [배점: ${q.score}] ${q.question}`;
     const optionsHtml = q.options.map((opt, i) =>
       `<label><input type="radio" name="answer" value="${i}"> ${opt}</label><br>`
     ).join('');
     quizForm.innerHTML = optionsHtml + `<button type="button" id="submitBtn">정답 제출</button>`;
     feedbackArea.textContent = "";
-    nextBtn.style.display = "none";
-    finishBtn.style.display = "none";
-    answered[idx] = false;
     document.getElementById('submitBtn').onclick = submitAnswer;
   }
 
   function submitAnswer() {
-    if (answered[currentQuiz]) return;
-
     const qIdx = quizOrder[currentQuiz];
     const q = quizData[qIdx];
     const checked = quizForm.querySelector('input[name="answer"]:checked');
@@ -108,91 +72,93 @@ function initQuiz() {
       return;
     }
     const answer = parseInt(checked.value, 10);
-
-    fetch('/save-quiz', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        name: userName,
-        dept: userDept,
-        question: q.question,
-        userAnswer: q.options[answer],
-        correct: q.options[q.correct],
-        isCorrect: answer === q.correct ? "O" : "X",
-        feedback: q.feedback[answer],
-        userAnswerIdx: answer
-      })
-    });
-
-    answered[currentQuiz] = true;
-    quizForm.querySelectorAll('input[name="answer"]').forEach(el => el.disabled = true);
-    document.getElementById('submitBtn').disabled = true;
-
-    let isCorrect = answer === q.correct;
-    if (isCorrect) {
-      score += q.score;
-      setCharacterVideo('correct');
-      characterSpeech.textContent = "정답이야! 최고야!";
-    } else {
-      setCharacterVideo('wrong');
-      characterSpeech.textContent = "앗, 틀렸어!";
-    }
-    feedbackArea.textContent = q.feedback[answer];
-
     userAnswers[currentQuiz] = {
       question: q.question,
       userAnswer: q.options[answer],
       userAnswerIdx: answer,
       correct: q.options[q.correct],
-      isCorrect: isCorrect ? "O" : "X",
+      isCorrect: answer === q.correct ? "O" : "X",
       feedback: q.feedback[answer],
       quizIdx: qIdx
     };
+    score += (answer === q.correct ? q.score : 0);
 
     if (currentQuiz < quizData.length - 1) {
-      nextBtn.style.display = "inline-block";
-      finishBtn.style.display = "none";
+      currentQuiz++;
+      loadQuiz(currentQuiz);
     } else {
-      nextBtn.style.display = "none";
-      finishBtn.style.display = "inline-block";
+      showSummary();
     }
   }
 
-  nextBtn.onclick = function() {
-    currentQuiz++;
-    if (currentQuiz < quizData.length) {
-      loadQuiz(currentQuiz);
-    }
-  };
-
-  finishBtn.onclick = function() {
-    let answerArr = Array(quizData.length).fill("");
-    userAnswers.forEach(ans => {
-      if (ans && typeof ans.quizIdx === "number") {
-        answerArr[ans.quizIdx] = (ans.userAnswerIdx + 1).toString();
-      }
-    });
-    answerArr = answerArr.map(a => a || "0");
-
-    quizContainer.innerHTML = `
-      <div style="margin:80px 0 40px 0;font-size:22px;">
-        퀴즈가 종료되었습니다.<br>
-        <b>최종 점수: ${score}점 / ${quizData.reduce((a,b)=>a+b.score,0)}점</b><br>
-        참여해주셔서 감사합니다!
-      </div>
+  function showSummary() {
+    // 문제별 요약 테이블 생성
+    let summaryHtml = `<h2 style="margin-bottom:30px;">내가 푼 문제 요약</h2>
+      <table style="width:100%;font-size:18px;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="border-bottom:1px solid #ccc;">번호</th>
+            <th style="border-bottom:1px solid #ccc;">문제</th>
+            <th style="border-bottom:1px solid #ccc;">내 답</th>
+            <th style="border-bottom:1px solid #ccc;">정답</th>
+            <th style="border-bottom:1px solid #ccc;">정/오답</th>
+            <th style="border-bottom:1px solid #ccc;">해설</th>
+          </tr>
+        </thead>
+        <tbody>
     `;
-    fetch('/save-quiz', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        name: userName,
-        dept: userDept,
-        question: "[최종제출]",
-        userAnswer: answerArr.join("/"),
-        correct: score,
-        isCorrect: "",
-        feedback: ""
-      })
-    });
-  };
+    for (let i = 0; i < quizData.length; i++) {
+      const ans = userAnswers[i] || {};
+      const isCorrect = ans.isCorrect === "O";
+      summaryHtml += `
+        <tr>
+          <td style="padding:6px 4px;">${i+1}</td>
+          <td style="padding:6px 4px;">${quizData[i].question}</td>
+          <td style="padding:6px 4px;">${ans.userAnswer || "-"}</td>
+          <td style="padding:6px 4px;">${quizData[i].options[quizData[i].correct]}</td>
+          <td style="padding:6px 4px;color:${isCorrect ? "#2e7d32" : "#c62828"};">${isCorrect ? "정답" : "오답"}</td>
+          <td style="padding:6px 4px;">${quizData[i].feedback[ans.userAnswerIdx || 0]}</td>
+        </tr>
+      `;
+    }
+    summaryHtml += `</tbody></table>
+      <div style="margin:30px 0;font-size:22px;">
+        <b>최종 점수: ${score}점 / ${quizData.reduce((a,b)=>a+b.score,0)}점</b>
+      </div>
+      <button id="finalSubmitBtn" style="font-size:22px;padding:14px 44px;border-radius:16px;background:linear-gradient(90deg,#a8e063,#f9d423);color:#5a3e1b;border:none;cursor:pointer;">최종 제출</button>
+    `;
+    quizContainer.innerHTML = summaryHtml;
+
+    document.getElementById('finalSubmitBtn').onclick = function() {
+      let answerArr = Array(quizData.length).fill("");
+      userAnswers.forEach(ans => {
+        if (ans && typeof ans.quizIdx === "number") {
+          answerArr[ans.quizIdx] = (ans.userAnswerIdx + 1).toString();
+        }
+      });
+      answerArr = answerArr.map(a => a || "0");
+
+      fetch('/save-quiz', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          name: userName,
+          dept: userDept,
+          question: "[최종제출]",
+          userAnswer: answerArr.join("/"),
+          correct: score,
+          isCorrect: "",
+          feedback: ""
+        })
+      }).then(() => {
+        quizContainer.innerHTML = `
+          <div style="margin:80px 0 40px 0;font-size:22px;">
+            퀴즈가 종료되었습니다.<br>
+            <b>최종 점수: ${score}점 / ${quizData.reduce((a,b)=>a+b.score,0)}점</b><br>
+            참여해주셔서 감사합니다!
+          </div>
+        `;
+      });
+    };
+  }
 }
