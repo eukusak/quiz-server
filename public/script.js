@@ -6,8 +6,8 @@ let userDept = "";
 let userAnswers = [];
 let score = 0;
 
-// 영상 파일 경로 (모든 문제 동일)
-const videoSrc = "ai_normal.mp4";
+// 영상 파일 경로 (모든 문제 동일, 파일명 변경)
+const videoSrc = "ai.mp4";
 
 window.onload = function() {
   fetch('quizData.json')
@@ -57,7 +57,7 @@ function initQuiz() {
   function loadQuiz(idx) {
     const qIdx = quizOrder[idx];
     const q = quizData[qIdx];
-    // 영상 자동 재생, 재생바 숨김, 크기 2배로 키움
+    // 영상 자동 재생, 재생바 숨김, 크기 2배로 키움, 파일명 ai.mp4
     quizContainer.innerHTML = `
       <div class="question-video-area" style="text-align:center;">
         <video width="640" height="360" autoplay muted playsinline style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;object-fit:cover;max-width:98vw;">
