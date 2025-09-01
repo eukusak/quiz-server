@@ -69,7 +69,7 @@ function initQuiz() {
     }
     quizContainer.innerHTML = `
       <div class="question-video-area" style="text-align:center;">
-        <video width="640" height="360" autoplay playsinline controls style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;object-fit:cover;max-width:98vw;">
+        <video width="640" height="360" autoplay playsinline style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;object-fit:cover;max-width:98vw;">
           <source src="${videoSrc}" type="video/mp4">
           브라우저가 video 태그를 지원하지 않습니다.
         </video>
