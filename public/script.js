@@ -71,8 +71,8 @@ function initQuiz() {
         </div>
         <form id="quizForm" style="text-align:center;display:inline-block;">
           ${q.options.map((opt, i) => `
-            <label style="display:block;font-size:20px;margin-bottom:12px;text-align:center;">
-              <input type="radio" name="answer" value="${i}"> ${opt}
+            <label style="display:block;font-size:20px;margin-bottom:12px;text-align:left;min-width:260px;">
+              <input type="radio" name="answer" value="${i}" style="margin-right:10px;"> ${opt}
             </label>
           `).join('')}
           <button type="button" id="submitBtn" style="display:block;margin:24px auto 0 auto;">정답 제출</button>
