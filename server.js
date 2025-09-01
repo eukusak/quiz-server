@@ -34,6 +34,20 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// 소속/성함 중복 체크 API
+app.post('/check-duplicate', (req, res) => {
+  const { name, dept } = req.body;
+  if (!name || !dept) return res.json({ duplicate: false });
+  db.get(
+    'SELECT * FROM quiz_results WHERE name=? AND dept=? AND question="[최종제출]"',
+    [name, dept],
+    (err, row) => {
+      if (row) return res.json({ duplicate: true });
+      res.json({ duplicate: false });
+    }
+  );
+});
+
 // 퀴즈 결과 저장 (최종 제출만 저장)
 app.post('/save-quiz', (req, res) => {
   const { name, dept, question, userAnswer, correct, isCorrect, feedback } = req.body;
@@ -55,7 +69,7 @@ app.post('/save-quiz', (req, res) => {
         [name, dept, question, userAnswer, correct, isCorrect, feedback || ""],
         function (err2) {
           if (err2) {
-            console.error('DB Error:', err2); // 콘솔에 에러 출력
+            console.error('DB Error:', err2);
             return res.status(500).json({ error: 'DB Error' });
           }
           res.json({ ok: true });
