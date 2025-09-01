@@ -57,21 +57,21 @@ function initQuiz() {
   function loadQuiz(idx) {
     const qIdx = quizOrder[idx];
     const q = quizData[qIdx];
-    // 영상 추가
+    // 영상 자동 재생, 재생바 숨김
     quizContainer.innerHTML = `
-      <div class="question-video-area" style="text-align:left;">
-        <video width="320" height="180" controls style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;">
+      <div class="question-video-area" style="text-align:center;">
+        <video width="320" height="180" autoplay muted playsinline style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;object-fit:cover;">
           <source src="${videoSrc}" type="video/mp4">
           브라우저가 video 태그를 지원하지 않습니다.
         </video>
       </div>
-      <div class="question-area" style="text-align:left;">
-        <div id="questionText" style="font-size:22px;font-weight:bold;color:#4b3f2f;margin-bottom:20px;text-align:left;">
+      <div class="question-area" style="text-align:center;">
+        <div id="questionText" style="font-size:22px;font-weight:bold;color:#4b3f2f;margin-bottom:20px;text-align:center;">
           (${idx+1}/${quizData.length}) [배점: ${q.score}] ${q.question}
         </div>
-        <form id="quizForm" style="text-align:left;">
+        <form id="quizForm" style="text-align:center;display:inline-block;">
           ${q.options.map((opt, i) => `
-            <label style="display:block;font-size:20px;margin-bottom:12px;text-align:left;">
+            <label style="display:block;font-size:20px;margin-bottom:12px;text-align:center;">
               <input type="radio" name="answer" value="${i}"> ${opt}
             </label>
           `).join('')}
@@ -121,8 +121,8 @@ function initQuiz() {
       const isCorrect = ans.isCorrect === "O";
       summaryHtml += `
         <div class="result-question-block" style="
-          margin-bottom:42px;
-          padding:28px 22px 28px 22px;
+          margin-bottom:48px;
+          padding:32px 28px 32px 28px;
           border-radius:18px;
           background:#f7f5ed;
           box-shadow:0 2px 10px rgba(180,170,140,0.07);
