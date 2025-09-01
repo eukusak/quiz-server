@@ -92,36 +92,40 @@ function initQuiz() {
   }
 
   function showSummary() {
-    // 문제별 요약 테이블 생성
-    let summaryHtml = `<h2 style="margin-bottom:30px;">내가 푼 문제 요약</h2>
-      <table style="width:100%;font-size:18px;border-collapse:collapse;">
-        <thead>
-          <tr>
-            <th style="border-bottom:1px solid #ccc;">번호</th>
-            <th style="border-bottom:1px solid #ccc;">문제</th>
-            <th style="border-bottom:1px solid #ccc;">내 답</th>
-            <th style="border-bottom:1px solid #ccc;">정답</th>
-            <th style="border-bottom:1px solid #ccc;">정/오답</th>
-            <th style="border-bottom:1px solid #ccc;">해설</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
+    let summaryHtml = `<h2 style="margin-bottom:30px;">내가 푼 문제 결과</h2>`;
     for (let i = 0; i < quizData.length; i++) {
+      const q = quizData[i];
       const ans = userAnswers[i] || {};
       const isCorrect = ans.isCorrect === "O";
       summaryHtml += `
-        <tr>
-          <td style="padding:6px 4px;">${i+1}</td>
-          <td style="padding:6px 4px;">${quizData[i].question}</td>
-          <td style="padding:6px 4px;">${ans.userAnswer || "-"}</td>
-          <td style="padding:6px 4px;">${quizData[i].options[quizData[i].correct]}</td>
-          <td style="padding:6px 4px;color:${isCorrect ? "#2e7d32" : "#c62828"};">${isCorrect ? "정답" : "오답"}</td>
-          <td style="padding:6px 4px;">${quizData[i].feedback[ans.userAnswerIdx || 0]}</td>
-        </tr>
+        <div class="result-question-block">
+          <div style="font-size:22px;font-weight:bold;color:#4b3f2f;margin-bottom:18px;">
+            (${i+1}/${quizData.length}) [배점: ${q.score}] ${q.question}
+          </div>
+          <form style="margin-bottom:10px;">`;
+      for (let j = 0; j < q.options.length; j++) {
+        summaryHtml += `
+          <label style="display:block;font-size:20px;margin-bottom:12px;color:${ans.userAnswerIdx === j ? "#2e7d32" : "#3d5a2a"};">
+            <input type="radio" name="answer${i}" value="${j}" disabled ${ans.userAnswerIdx === j ? "checked" : ""}>
+            ${q.options[j]}
+          </label>
+        `;
+      }
+      summaryHtml += `
+          </form>
+          <div style="font-size:19px;margin-bottom:6px;">
+            <b>정답:</b> ${q.options[q.correct]}
+          </div>
+          <div style="font-size:18px;color:${isCorrect ? "#2e7d32" : "#c62828"};margin-bottom:4px;">
+            <b>${isCorrect ? "정답입니다!" : "오답입니다!"}</b>
+          </div>
+          <div style="font-size:17px;color:#444;">
+            <b>해설:</b> ${q.feedback[ans.userAnswerIdx || 0]}
+          </div>
+        </div>
       `;
     }
-    summaryHtml += `</tbody></table>
+    summaryHtml += `
       <div style="margin:30px 0;font-size:22px;">
         <b>최종 점수: ${score}점 / ${quizData.reduce((a,b)=>a+b.score,0)}점</b>
       </div>
