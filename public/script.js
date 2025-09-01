@@ -63,13 +63,13 @@ function initQuiz() {
     const qIdx = quizOrder[idx];
     const q = quizData[qIdx];
     let buttonHtml = `<button type="button" id="submitBtn" style="display:block;margin:24px auto 0 auto;">정답 제출</button>`;
-    // 마지막 문제(10번)일 때 "최종 제출" 버튼도 함께 보여줌
+    // 10번 문제일 때 "최종 제출" 버튼은 비활성화 상태로 먼저 보여줌
     if (idx === quizData.length - 1) {
-      buttonHtml += `<button type="button" id="finalSubmitBtn" style="display:block;margin:24px auto 0 auto;background:linear-gradient(90deg,#a8e063,#f9d423);color:#5a3e1b;font-size:22px;padding:14px 44px;border-radius:16px;border:none;cursor:pointer;">최종 제출</button>`;
+      buttonHtml += `<button type="button" id="finalSubmitBtn" disabled style="display:block;margin:24px auto 0 auto;background:linear-gradient(90deg,#a8e063,#f9d423);color:#5a3e1b;font-size:22px;padding:14px 44px;border-radius:16px;border:none;cursor:not-allowed;opacity:0.5;">최종 제출</button>`;
     }
     quizContainer.innerHTML = `
       <div class="question-video-area" style="text-align:center;">
-        <video width="640" height="360" autoplay muted playsinline style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;object-fit:cover;max-width:98vw;">
+        <video width="640" height="360" autoplay playsinline controls style="border-radius:16px;border:2px solid #b4d3a7;background:#eaf6e7;box-shadow:0 2px 16px rgba(120,180,120,0.14);margin-bottom:18px;object-fit:cover;max-width:98vw;">
           <source src="${videoSrc}" type="video/mp4">
           브라우저가 video 태그를 지원하지 않습니다.
         </video>
@@ -90,8 +90,15 @@ function initQuiz() {
       </div>
     `;
     document.getElementById('submitBtn').onclick = submitAnswer;
+    // 10번 문제일 때 최종 제출 버튼 활성화 제어
     if (idx === quizData.length - 1) {
-      document.getElementById('finalSubmitBtn').onclick = showSummary;
+      // 정답 제출 후에 버튼 활성화
+      const finalBtn = document.getElementById('finalSubmitBtn');
+      finalBtn.onclick = function() {
+        // 비활성화 상태에서는 아무 동작 없음
+        if (finalBtn.disabled) return;
+        showSummary();
+      };
     }
   }
 
@@ -121,8 +128,12 @@ function initQuiz() {
       currentQuiz++;
       loadQuiz(currentQuiz);
     } else {
-      // 마지막 문제에선 최종 제출 버튼만 활성화, 결과는 showSummary에서 처리
-      document.getElementById('feedbackArea').textContent = "정답이 저장되었습니다. 아래의 '최종 제출'을 눌러주세요.";
+      // 마지막 문제에서는 정답 제출 후에 최종 제출 버튼을 활성화
+      const finalBtn = document.getElementById('finalSubmitBtn');
+      finalBtn.disabled = false;
+      finalBtn.style.opacity = "1";
+      finalBtn.style.cursor = "pointer";
+      feedbackArea.textContent = "정답이 저장되었습니다. 아래의 '최종 제출'을 눌러주세요.";
     }
   }
 
