@@ -7,6 +7,7 @@ let userAnswers = [];
 let score = 0;
 
 const videoSrc = "ai.mp4";
+const resultAudioSrc = "result.mp3"; // 결과 페이지에서 자동 재생할 음성 파일명
 
 window.onload = function() {
   fetch('quizData.json')
@@ -92,10 +93,8 @@ function initQuiz() {
     document.getElementById('submitBtn').onclick = submitAnswer;
     // 10번 문제일 때 최종 제출 버튼 활성화 제어
     if (idx === quizData.length - 1) {
-      // 정답 제출 후에 버튼 활성화
       const finalBtn = document.getElementById('finalSubmitBtn');
       finalBtn.onclick = function() {
-        // 비활성화 상태에서는 아무 동작 없음
         if (finalBtn.disabled) return;
         showSummary();
       };
@@ -128,7 +127,6 @@ function initQuiz() {
       currentQuiz++;
       loadQuiz(currentQuiz);
     } else {
-      // 마지막 문제에서는 정답 제출 후에 최종 제출 버튼을 활성화
       const finalBtn = document.getElementById('finalSubmitBtn');
       finalBtn.disabled = false;
       finalBtn.style.opacity = "1";
@@ -174,6 +172,8 @@ function initQuiz() {
     .then(res => res.json())
     .then(result => {
       let summaryHtml = `<h2 style="margin-bottom:40px;text-align:left;">내가 푼 문제 결과</h2>`;
+      // 자동 음성 재생 오디오 태그
+      summaryHtml += `<audio id="resultAudio" src="${resultAudioSrc}" autoplay></audio>`;
       for (let i = 0; i < quizData.length; i++) {
         const q = quizData[i];
         const ans = userAnswers[i] || {};
@@ -225,6 +225,12 @@ function initQuiz() {
         </div>
       `;
       quizContainer.innerHTML = summaryHtml;
+      // (오토플레이 정책 때문에) 사용자가 상호작용 후에는 자동재생이 잘 작동함
+      // 만약 일부 브라우저에서 자동재생이 막히면, 아래 코드로 강제 재생 시도 가능
+      const audio = document.getElementById('resultAudio');
+      if (audio) {
+        audio.play().catch(()=>{});
+      }
     });
   }
 }
