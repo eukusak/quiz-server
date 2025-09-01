@@ -113,18 +113,17 @@ function initQuiz() {
     }
   }
 
-  function cleanFeedback(feedback, isCorrect) {
-    // "정답입니다! 해설:" 또는 "오답입니다! 해설:" 등 제거
-    // 다양한 패턴 처리
-    // 예: "정답입니다! 해설: ..." / "오답입니다! 해설: ..." / "정답입니다!" / "오답입니다!" / "해설: ..."
-    // 1. "정답입니다! 해설:" or "오답입니다! 해설:" or "정답입니다! " or "오답입니다! " 제거
+  // 해설 앞에 "해설:"만 붙이고, 모든 "정답입니다! 해설:", "오답입니다! 해설:", "틀렸습니다. 해설:", "정답입니다!", "오답입니다!", "해설:" 등은 제거
+  function cleanFeedback(feedback) {
     let cleaned = feedback;
-    cleaned = cleaned.replace(/^정답입니다! 해설:\s*/,"");
-    cleaned = cleaned.replace(/^오답입니다! 해설:\s*/,"");
-    cleaned = cleaned.replace(/^정답입니다!\s*/,"");
-    cleaned = cleaned.replace(/^오답입니다!\s*/,"");
-    cleaned = cleaned.replace(/^해설:\s*/,"");
-    return cleaned.trim();
+    cleaned = cleaned.replace(/^정답입니다! 해설:\s*/, "");
+    cleaned = cleaned.replace(/^오답입니다! 해설:\s*/, "");
+    cleaned = cleaned.replace(/^틀렸습니다\. 해설:\s*/, "");
+    cleaned = cleaned.replace(/^정답입니다!\s*/, "");
+    cleaned = cleaned.replace(/^오답입니다!\s*/, "");
+    cleaned = cleaned.replace(/^해설:\s*/, "");
+    cleaned = cleaned.replace(/^틀렸습니다\.\s*/, "");
+    return "해설: " + cleaned.trim();
   }
 
   function showSummary() {
@@ -164,7 +163,7 @@ function initQuiz() {
             <b>${isCorrect ? "정답입니다!" : "오답입니다!"}</b>
           </div>
           <div style="font-size:17px;color:#444;text-align:left;">
-            ${cleanFeedback(q.feedback[ans.userAnswerIdx || 0], isCorrect)}
+            ${cleanFeedback(q.feedback[ans.userAnswerIdx || 0])}
           </div>
         </div>
       `;
