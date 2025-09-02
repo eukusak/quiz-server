@@ -6,7 +6,9 @@ const session = require('express-session');
 const fs = require('fs');
 
 const app = express();
-const db = new sqlite3.Database('quiz.db');
+
+// ★★★ Persistent Disk 경로로 변경 ★★★
+const db = new sqlite3.Database('/data/quiz.db'); // 기존: 'quiz.db', 변경: '/data/quiz.db'
 
 // quizData를 public/quizData.json에서 불러옴
 const quizData = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'quizData.json'), 'utf8'));
